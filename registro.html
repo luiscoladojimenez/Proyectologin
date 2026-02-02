@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Registro de usuario</title>
+
+  <!-- Bootstrap -->
+  <link rel="stylesheet" href="./libreriabuena/bootstrap.min.css">
+  <script src="./libreriabuena/jquery-3.1.1.min.js"></script>
+  <script src="./libreriabuena/popper.min.js"></script>
+  <script src="./libreriabuena/bootstrap.min.js"></script>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+  <style>
+    body { 
+      font-family: 'Poppins', sans-serif; 
+      margin: 0; 
+      padding: 0; 
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)),
+                  url("./imagenes/fondo/fondo3.jpeg") center/cover no-repeat; 
+      color: #fff; 
+      text-align: center; 
+    }
+
+    h2 {
+      font-weight: 600;
+      font-size: 2rem;
+      margin-bottom: 20px;
+      text-shadow: 2px 2px 5px rgba(0,0,0,0.7);
+      background: none;
+    }
+
+    form {
+      background: rgba(255,255,255,0.1);
+      backdrop-filter: blur(10px);
+      padding: 30px;
+      width: 380px;
+      border-radius: 15px;
+      border: 1px solid rgba(255,255,255,0.3);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+      transition: transform 0.3s ease;
+    }
+
+    form:hover {
+      transform: translateY(-5px);
+    }
+
+    label {
+      font-weight: 600;
+      color: #eee;
+    }
+
+    .btn-primary {
+      background: linear-gradient(45deg, #6a11cb, #2575fc);
+      border: none;
+      transition: 0.3s;
+    }
+
+    .btn-primary:hover {
+      background: linear-gradient(45deg, #2575fc, #6a11cb);
+      transform: scale(1.02);
+    }
+
+    #resultado {
+      margin-top: 15px;
+      font-size: 0.9rem;
+      color: #ffcccb;
+    }
+
+    a.btn {
+      margin-top: 20px;
+      background: linear-gradient(45deg, #00b09b, #96c93d);
+      border: none;
+      transition: 0.3s;
+    }
+
+    a.btn:hover {
+      background: linear-gradient(45deg, #96c93d, #00b09b);
+      transform: scale(1.02);
+    }
+  </style>
+</head>
+<body>
+
+  <h2>✨ Registro de nuevo usuario ✨</h2>
+
+  <form id="registroForm">
+    <div class="mb-3 text-start">
+      <label for="nombre">Nombre:</label>
+      <input type="text" id="nombre" name="nombre" class="form-control" required>
+    </div>
+
+    <div class="mb-3 text-start">
+      <label for="dni">DNI:</label>
+      <input type="text" id="dni" name="dni" class="form-control" required>
+    </div>
+
+    <div class="mb-3 text-start">
+      <label for="email">Email:</label>
+      <input type="email" id="email" name="email" class="form-control" required>
+    </div>
+
+    <div class="mb-3 text-start">
+      <label for="foto">Foto (URL):</label>
+      <input type="text" id="foto" name="foto" class="form-control" required>
+    </div>
+
+    <div class="mb-3 text-start">
+      <label for="contrasena">Contraseña:</label>
+      <input type="password" id="contrasena" name="contrasena" class="form-control" required>
+    </div>
+
+    <button type="button" id="registrar" class="btn btn-primary w-100">Registrar</button>
+  </form>
+
+  <a href="bienvenida.php" class="btn btn-success">Ir a página inicial</a>
+
+  <div id="resultado"></div>
+
+  <script>
+    $(document).ready(function(){
+      $("#registrar").click(function(){
+        let nombre = $("#nombre").val().trim();
+        let dni = $("#dni").val().trim();
+        let email = $("#email").val().trim();
+        let foto = $("#foto").val().trim();
+        let contrasena = $("#contrasena").val().trim();
+
+        if(nombre === "" || dni === "" || email === "" || foto === "" || contrasena === ""){
+          $("#resultado").text("⚠️ Por favor rellena todos los campos");
+          return;
+        }
+
+        $.ajax({
+          url: "registro.php",
+          type: "POST",
+          data: { nombre, dni, email, foto, contrasena },
+          success: function(respuesta){
+            if(respuesta === "success"){
+              window.location.href = "bienvenida.php";
+            } else {
+              $("#resultado").text(respuesta);
+            }
+          },
+          error: function(){
+            $("#resultado").text("❌ Error en la petición AJAX");
+          }
+        });
+      });
+    });
+  </script>
+
+</body>
+</html>

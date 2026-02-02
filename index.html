@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Login</title>
+
+  <!-- Bootstrap -->
+  <link rel="stylesheet" href="./libreriabuena/bootstrap.min.css">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="./libreriabuena/popper.min.js"></script>
+  <script src="./libreriabuena/bootstrap.min.js"></script>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)),
+                  url("./imagenes/fondo/fondo3.jpeg") center/cover no-repeat;
+      color: #fff;
+    }
+    h1 { font-weight: 600; font-size: 2.2rem; margin-bottom: 30px; text-shadow: 2px 2px 5px rgba(0,0,0,0.7); }
+    .panel { background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); padding: 30px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.3); box-shadow: 0 8px 20px rgba(0,0,0,0.5); transition: transform 0.3s ease; }
+    .panel:hover { transform: translateY(-5px); }
+    label { font-weight: 600; color: #eee; }
+    .btn-primary { background: linear-gradient(45deg, #6a11cb, #2575fc); border: none; transition: 0.3s; }
+    .btn-primary:hover { background: linear-gradient(45deg, #2575fc, #6a11cb); transform: scale(1.02); }
+    .btn-success { background: linear-gradient(45deg, #00b09b, #96c93d); border: none; transition: 0.3s; }
+    .btn-success:hover { background: linear-gradient(45deg, #96c93d, #00b09b); transform: scale(1.02); }
+    #resultado { font-size: 0.9rem; text-align: center; }
+  </style>
+</head>
+<body>
+
+  <h1>✨ La Mejor Tienda ✨</h1>
+
+  <div class="container">
+    <div class="row g-4 justify-content-center align-items-stretch">
+
+      <!-- LOGIN -->
+      <div class="col-md-5 d-flex">
+        <div class="panel flex-fill">
+          <h2 class="text-info text-center mb-4">Acceso a clientes</h2>
+
+          <form id="loginForm" class="text-start" novalidate>
+            <div class="mb-3">
+              <label for="dni">DNI:</label>
+              <input type="text" id="dni" name="dni" class="form-control" placeholder="Introduzca número DNI" required>
+            </div>
+
+            <div class="mb-3">
+              <label for="contrasena">Contraseña:</label>
+              <input type="password" id="contrasena" name="contrasena" class="form-control" placeholder="Introduzca contraseña" required>
+            </div>
+
+            <button class="btn btn-primary w-100 mt-3" type="submit" id="entrar">Entrar</button>
+          </form>
+
+          <div id="resultado" class="mt-3"></div>
+        </div>
+      </div>
+
+      <!-- REGISTRO -->
+      <div class="col-md-5 d-flex">
+        <div class="panel flex-fill d-flex flex-column justify-content-center">
+          <h2 class="text-success text-center mb-4">Nuevo registro</h2>
+          <a href="./registro.html" class="btn btn-success w-100">Crear cuenta nueva</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Script -->
+  <script>
+    $(document).ready(function(){
+      $("#loginForm").on("submit", function(e){
+        e.preventDefault();
+
+        let dni = $("#dni").val().trim();
+        let contrasena = $("#contrasena").val().trim();
+
+        if(dni === "" || contrasena === ""){
+          $("#resultado").html('<div class="alert alert-warning">⚠️ Por favor rellena todos los campos</div>');
+          return;
+        }
+
+        $.ajax({
+          url: "login.php",
+          type: "POST",
+          data: { dni: dni, contrasena: contrasena },
+          success: function(respuesta){
+            if(respuesta === "success"){
+              window.location.href = "bienvenida.php";
+            } else {
+              $("#resultado").html('<div class="alert alert-danger">'+respuesta+'</div>');
+            }
+          },
+          error: function(){
+            $("#resultado").html('<div class="alert alert-danger">❌ Error en la petición AJAX</div>');
+          }
+        });
+      });
+    });
+  </script>
+</body>
+</html>
